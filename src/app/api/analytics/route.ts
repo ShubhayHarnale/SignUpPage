@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { error } = await supabase
-      .from('analytics')
+      .from('Analytics')
       .insert([newEvent])
 
     if (error) {
@@ -54,7 +54,7 @@ export async function GET() {
   try {
     // Fetch analytics from Supabase
     const { data: analytics, error } = await supabase
-      .from('analytics')
+      .from('Analytics')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(1000) // Limit to recent 1000 events

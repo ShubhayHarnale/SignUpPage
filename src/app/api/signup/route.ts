@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 
     // Check for existing email
     const { data: existingSignup, error: selectError } = await supabase
-      .from('signups')
+      .from('SignUps')
       .select('email')
       .eq('email', email)
       .maybeSingle()
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     // Insert new signup
     const { error: insertError } = await supabase
-      .from('signups')
+      .from('SignUps')
       .insert([{ email }])
 
     if (insertError) {
@@ -89,7 +89,7 @@ export async function GET() {
   try {
     // Fetch signups from Supabase
     const { data: signups, error } = await supabase
-      .from('signups')
+      .from('SignUps')
       .select('email, created_at')
       .order('created_at', { ascending: false })
 
