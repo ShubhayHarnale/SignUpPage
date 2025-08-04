@@ -94,7 +94,10 @@ export async function POST(request: NextRequest) {
       writeAnalytics(analytics)
     }
 
-    console.log(`Analytics event: ${eventData.event} (using ${useSupabase ? 'Supabase' : 'JSON file'})`)
+    // Log analytics method for debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Analytics event: ${eventData.event} (using ${useSupabase ? 'Supabase' : 'JSON file'})`)
+    }
 
     return NextResponse.json(
       { success: true },

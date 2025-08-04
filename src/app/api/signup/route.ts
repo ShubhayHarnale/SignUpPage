@@ -39,17 +39,13 @@ function writeSignups(signups: any[]) {
 }
 
 export async function POST(request: NextRequest) {
+  let email: string = ''
+  
   try {
-    console.log('📧 Signup API called')
     const requestBody = await request.json()
-    console.log('📧 Request body:', requestBody)
-    
-    const { email } = requestBody
-
-    console.log('📧 Extracted email:', email, 'Type:', typeof email)
+    email = requestBody.email
 
     if (!email || typeof email !== 'string') {
-      console.error('❌ Email validation failed: missing or wrong type')
       return NextResponse.json(
         { error: 'Email is required' },
         { status: 400 }
@@ -59,14 +55,11 @@ export async function POST(request: NextRequest) {
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
-      console.error('❌ Email format validation failed:', email)
       return NextResponse.json(
         { error: 'Please enter a valid email address' },
         { status: 400 }
       )
     }
-
-    console.log('✅ Email validation passed:', email)
 
     let useSupabase = false
     
@@ -80,39 +73,31 @@ export async function POST(request: NextRequest) {
           .maybeSingle()
 
         if (selectError) {
-          console.error('❌ Supabase select error:', selectError)
-          console.log('🔄 Falling back to JSON storage due to Supabase error')
+          console.error('Supabase select error:', selectError)
         } else {
-          console.log('✅ Supabase select query successful')
           if (existingSignup) {
-            console.log('⚠️ Duplicate email found:', email)
             return NextResponse.json(
               { error: 'This email is already registered' },
               { status: 400 }
             )
           }
 
-          console.log('📝 Preparing to insert new signup')
           const newSignup = {
             email
           }
-          console.log('📝 New signup data:', newSignup)
 
           const { error: insertError } = await supabase
             .from('SignUps')
             .insert([newSignup])
 
           if (insertError) {
-            console.error('❌ Supabase insert error:', insertError)
-            console.log('🔄 Falling back to JSON storage due to Supabase error')
+            console.error('Supabase insert error:', insertError)
           } else {
-            console.log('✅ Supabase insert successful!')
             useSupabase = true
           }
         }
       } catch (supabaseError) {
         console.error('Supabase connection error:', supabaseError)
-        console.log('Falling back to JSON storage due to connection error')
       }
     }
     
@@ -138,7 +123,10 @@ export async function POST(request: NextRequest) {
       writeSignups(signups)
     }
 
-    console.log(`New signup: ${email} (using ${useSupabase ? 'Supabase' : 'JSON file'})`)
+    // Log signup method for debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`New signup: ${email} (using ${useSupabase ? 'Supabase' : 'JSON file'})`)
+    }
 
     return NextResponse.json(
       { success: true, message: 'Successfully signed up!' },
@@ -146,10 +134,38 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error('Signup error:', error)
-    return NextResponse.json(
-      { error: 'An internal error occurred. Please try again.' },
-      { status: 500 }
-    )
+    
+    // Always fall back to JSON storage if something goes wrong
+    try {
+      const signups = readSignups()
+      
+      if (!signups.some((signup: any) => signup.email === email)) {
+        const newSignup = {
+          email,
+          timestamp: new Date().toISOString(),
+          ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+          userAgent: request.headers.get('user-agent') || 'unknown'
+        }
+        signups.push(newSignup)
+        writeSignups(signups)
+        
+        return NextResponse.json(
+          { success: true, message: 'Successfully signed up!' },
+          { status: 200 }
+        )
+      } else {
+        return NextResponse.json(
+          { error: 'This email is already registered' },
+          { status: 400 }
+        )
+      }
+    } catch (fallbackError) {
+      console.error('Fallback storage error:', fallbackError)
+      return NextResponse.json(
+        { error: 'An internal error occurred. Please try again.' },
+        { status: 500 }
+      )
+    }
   }
 }
 
