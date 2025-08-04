@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
+
+// Initialize Supabase client directly
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables')
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,15 +32,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if Supabase is configured
-    if (!isSupabaseConfigured() || !supabase) {
-      console.error('❌ Supabase not configured')
-      return NextResponse.json(
-        { error: 'Database service unavailable' },
-        { status: 500 }
-      )
-    }
-
     // Check for existing email
     const { data: existingSignup, error: selectError } = await supabase
       .from('SignUps')
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
       .maybeSingle()
 
     if (selectError) {
-      console.error('❌ Supabase select error:', selectError)
+      console.error('Supabase select error:', selectError)
       return NextResponse.json(
         { error: 'Database error occurred. Please try again.' },
         { status: 500 }
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
       .insert([{ email }])
 
     if (insertError) {
-      console.error('❌ Supabase insert error:', insertError)
+      console.error('Supabase insert error:', insertError)
       return NextResponse.json(
         { error: 'Failed to save signup. Please try again.' },
         { status: 500 }
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('❌ Signup error:', error)
+    console.error('Signup error:', error)
     return NextResponse.json(
       { error: 'An internal error occurred. Please try again.' },
       { status: 500 }
@@ -81,14 +82,6 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    // Check if Supabase is configured
-    if (!isSupabaseConfigured() || !supabase) {
-      return NextResponse.json(
-        { error: 'Database service unavailable' },
-        { status: 500 }
-      )
-    }
-
     // Fetch signups from Supabase
     const { data: signups, error } = await supabase
       .from('SignUps')
@@ -96,7 +89,7 @@ export async function GET() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('❌ Supabase error:', error)
+      console.error('Supabase error:', error)
       return NextResponse.json(
         { error: 'Failed to fetch signups' },
         { status: 500 }
@@ -111,7 +104,7 @@ export async function GET() {
       })) || []
     })
   } catch (error) {
-    console.error('❌ Error fetching signups:', error)
+    console.error('Error fetching signups:', error)
     return NextResponse.json(
       { error: 'Failed to fetch signups' },
       { status: 500 }

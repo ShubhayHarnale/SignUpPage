@@ -1,19 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase, isSupabaseConfigured } from '@/lib/supabase'
-import type { AnalyticsEvent } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
+
+// Initialize Supabase client directly
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables')
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function POST(request: NextRequest) {
   try {
     const eventData = await request.json()
 
-    // Check if Supabase is configured
-    if (!isSupabaseConfigured() || !supabase) {
-      // Just return success if analytics isn't configured (non-critical)
-      return NextResponse.json({ success: true }, { status: 200 })
-    }
-
     // Store analytics event in Supabase
-    const newEvent: AnalyticsEvent = {
+    const newEvent = {
       event: eventData.event,
       action: eventData.action,
       platform: eventData.platform,
@@ -29,14 +32,14 @@ export async function POST(request: NextRequest) {
       .insert([newEvent])
 
     if (error) {
-      console.error('❌ Supabase analytics error:', error)
+      console.error('Supabase analytics error:', error)
       // Still return success for analytics (non-critical)
       return NextResponse.json({ success: true }, { status: 200 })
     }
 
     return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
-    console.error('❌ Analytics error:', error)
+    console.error('Analytics error:', error)
     // Analytics failures shouldn't break the user experience
     return NextResponse.json({ success: true }, { status: 200 })
   }
@@ -44,14 +47,6 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    // Check if Supabase is configured
-    if (!isSupabaseConfigured() || !supabase) {
-      return NextResponse.json(
-        { error: 'Analytics service unavailable' },
-        { status: 500 }
-      )
-    }
-
     // Fetch analytics from Supabase
     const { data: analytics, error } = await supabase
       .from('analytics')
@@ -60,7 +55,7 @@ export async function GET() {
       .limit(1000) // Limit to recent 1000 events
 
     if (error) {
-      console.error('❌ Supabase analytics error:', error)
+      console.error('Supabase analytics error:', error)
       return NextResponse.json(
         { error: 'Failed to fetch analytics' },
         { status: 500 }
@@ -79,7 +74,7 @@ export async function GET() {
 
     return NextResponse.json(summary)
   } catch (error) {
-    console.error('❌ Error fetching analytics:', error)
+    console.error('Error fetching analytics:', error)
     return NextResponse.json(
       { error: 'Failed to fetch analytics' },
       { status: 500 }
