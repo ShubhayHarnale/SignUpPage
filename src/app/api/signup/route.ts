@@ -6,6 +6,11 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables:', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseAnonKey,
+    nodeEnv: process.env.NODE_ENV
+  })
   throw new Error('Missing Supabase environment variables')
 }
 
@@ -34,7 +39,7 @@ export async function POST(request: NextRequest) {
 
     // Check for existing email
     const { data: existingSignup, error: selectError } = await supabase
-      .from('SignUps')
+      .from('signups')
       .select('email')
       .eq('email', email)
       .maybeSingle()
@@ -56,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     // Insert new signup
     const { error: insertError } = await supabase
-      .from('SignUps')
+      .from('signups')
       .insert([{ email }])
 
     if (insertError) {
@@ -84,7 +89,7 @@ export async function GET() {
   try {
     // Fetch signups from Supabase
     const { data: signups, error } = await supabase
-      .from('SignUps')
+      .from('signups')
       .select('email, created_at')
       .order('created_at', { ascending: false })
 
