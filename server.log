@@ -1,0 +1,16 @@
+
+> signup-page@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.1.6
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.68.75:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1070ms
+ ✓ Compiled /api/signup in 407ms (425 modules)
+ POST /api/signup 200 in 1284ms
+ POST /api/signup 400 in 215ms
+ ✓ Compiled in 110ms (425 modules)
+[?25h
