@@ -34,12 +34,7 @@ export default function StickyDemoButton() {
       })
     }
 
-    // Track demo button click
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('video-interaction', {
-        detail: { action: 'sticky_button_click' }
-      }))
-    }
+    // Demo button click tracked by Vercel analytics
   }
 
   if (!isVisible) return null

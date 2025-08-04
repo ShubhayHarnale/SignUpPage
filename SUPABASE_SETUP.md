@@ -19,10 +19,10 @@ Once your project is created:
 1. Go to **SQL Editor** in your Supabase dashboard
 2. Run these SQL commands to create the required tables:
 
-### Create Signups Table
+### Create SignUps Table
 ```sql
--- Create signups table
-CREATE TABLE signups (
+-- Create SignUps table (note the capital S and U to match your existing table)
+CREATE TABLE "SignUps" (
   id BIGSERIAL PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
   ip_address VARCHAR(45),
@@ -31,30 +31,11 @@ CREATE TABLE signups (
 );
 
 -- Create index for faster email lookups
-CREATE INDEX idx_signups_email ON signups(email);
-CREATE INDEX idx_signups_created_at ON signups(created_at);
+CREATE INDEX idx_signups_email ON "SignUps"(email);
+CREATE INDEX idx_signups_created_at ON "SignUps"(created_at);
 ```
 
-### Create Analytics Table
-```sql
--- Create analytics table
-CREATE TABLE analytics (
-  id BIGSERIAL PRIMARY KEY,
-  event VARCHAR(100) NOT NULL,
-  action VARCHAR(100),
-  platform VARCHAR(50),
-  current_time DECIMAL,
-  page VARCHAR(500),
-  user_agent TEXT,
-  referrer VARCHAR(1000),
-  ip_address VARCHAR(45),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Create indexes for analytics
-CREATE INDEX idx_analytics_event ON analytics(event);
-CREATE INDEX idx_analytics_created_at ON analytics(created_at);
-```
+**Note:** We only need the SignUps table. Analytics are handled by Vercel's built-in analytics system.
 
 ## Step 3: Get API Credentials
 
@@ -85,8 +66,8 @@ npm run dev
 2. Test signup form on your landing page
 3. Check data in Supabase dashboard:
    - Go to **Table Editor**
-   - View `signups` and `analytics` tables
-   - Verify data is being stored
+   - View `SignUps` table
+   - Verify signup data is being stored
 
 ## Step 6: View Your Data
 
@@ -96,8 +77,9 @@ npm run dev
 - **Real-time**: See data updates live
 
 ### Via API Endpoints
-- **View signups**: `http://localhost:3001/api/signup`
-- **View analytics**: `http://localhost:3001/api/analytics`
+- **View signups**: `http://localhost:3000/api/signup`
+
+**Note:** Analytics are handled by Vercel's built-in system.
 
 ## Security Notes
 

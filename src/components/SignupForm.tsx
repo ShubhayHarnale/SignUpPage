@@ -13,12 +13,7 @@ export default function SignupForm() {
     setIsSubmitting(true)
     setError('')
 
-    // Track signup attempt
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('signup-event', {
-        detail: { success: false, email: email.replace(/(.{2}).*(@.*)/, '$1***$2') }
-      }))
-    }
+    // Signup attempt - analytics handled by Vercel
 
     try {
       const response = await fetch('/api/signup', {
@@ -33,12 +28,7 @@ export default function SignupForm() {
         setIsSuccess(true)
         setEmail('')
         
-        // Track successful signup
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('signup-event', {
-            detail: { success: true }
-          }))
-        }
+        // Successful signup - analytics handled by Vercel
       } else {
         const data = await response.json()
         setError(data.error || 'An error occurred. Please try again.')

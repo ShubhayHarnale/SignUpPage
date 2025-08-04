@@ -18,12 +18,7 @@ export default function VideoPlayer() {
       videoRef.current.play()
     }
     
-    // Track video interaction
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('video-interaction', {
-        detail: { action: isPlaying ? 'pause' : 'play', currentTime }
-      }))
-    }
+    // Video interaction tracked by Vercel analytics
   }
 
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -36,12 +31,7 @@ export default function VideoPlayer() {
     videoRef.current.currentTime = newTime
     setCurrentTime(newTime)
     
-    // Track seeking
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('video-interaction', {
-        detail: { action: 'seek', currentTime: newTime }
-      }))
-    }
+    // Video seeking tracked by Vercel analytics
   }
 
   const formatTime = (seconds: number) => {
