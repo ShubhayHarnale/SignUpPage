@@ -3,10 +3,5 @@
     "deploymentEnabled": {
       "main": true
     }
-  },
-  "functions": {
-    "src/app/api/**/*.ts": {
-      "runtime": "@vercel/node"
-    }
   }
 }
