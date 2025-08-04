@@ -1,0 +1,5 @@
+# This file ensures the videos directory is tracked by git
+# Place your video files here:
+# - demo.mp4 (primary video file)
+# - demo.webm (alternative format)
+# - thumbnail.jpg (optional video thumbnail)
