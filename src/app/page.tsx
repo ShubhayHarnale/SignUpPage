@@ -89,6 +89,13 @@ export default function Home() {
               >
                 shubhayharnale@gmail.com
               </a>
+              {' '}or{' '}
+              <a 
+                href="mailto:saarjosh2@gmail.com" 
+                className="text-blue-600 hover:text-blue-700 underline transition-colors"
+              >
+                saarjosh2@gmail.com
+              </a>
             </p>
           </div>
         </div>
