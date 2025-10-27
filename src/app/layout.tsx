@@ -5,10 +5,10 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'VoiceToSocial - Turn Voice Recordings Into Social Media Content',
-  description: 'Upload a webinar, seminar, or coaching session. Get LinkedIn posts, Instagram captions, Twitter threads, and more - all optimized for each platform.',
-  keywords: 'voice to social media, AI content creation, social media automation, content repurposing',
-  authors: [{ name: 'VoiceToSocial' }],
+  title: 'ChartUpp - Connect with Micro-Influencers & Grow Your Brand',
+  description: 'ChartUpp connects small businesses with the right micro-influencers to drive exposure, conversions, and measurable ROI. Join early access today.',
+  keywords: 'micro-influencers, influencer marketing, small business growth, brand partnerships, influencer discovery',
+  authors: [{ name: 'ChartUpp' }],
   robots: 'index, follow',
 }
 

@@ -1,6 +1,6 @@
-# VoiceToSocial Landing Page
+# ChartUpp Landing Page
 
-A modern, responsive landing page for collecting early access signups for an AI tool that converts voice recordings into social media content.
+A modern, responsive landing page for collecting early access signups for ChartUpp - a platform that connects small businesses with micro-influencers.
 
 ## Features
 

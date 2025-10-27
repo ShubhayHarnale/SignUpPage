@@ -42,21 +42,19 @@ export default function SignupForm() {
 
   if (isSuccess) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-        <div className="flex items-center space-x-3">
-          <div className="flex-shrink-0">
-            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
+        <div className="flex justify-center mb-4">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <div>
-            <h3 className="text-lg font-medium text-green-800">Welcome to the waitlist!</h3>
-            <p className="text-green-700">We'll notify you as soon as VoiceToSocial is ready.</p>
-          </div>
         </div>
+        <h3 className="text-2xl font-bold text-green-900 mb-2">You're on the list!</h3>
+        <p className="text-green-800 text-lg mb-4">We'll be in touch soon.</p>
         <button
           onClick={() => setIsSuccess(false)}
-          className="mt-4 text-sm text-green-600 hover:text-green-800 underline"
+          className="text-sm text-green-700 hover:text-green-900 underline transition-colors"
         >
           Sign up another email
         </button>
@@ -65,9 +63,8 @@ export default function SignupForm() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 border">
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">Join Early Access</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="bg-white rounded-xl shadow-xl p-8 border border-gray-100">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label htmlFor="email" className="sr-only">
             Email address
@@ -77,14 +74,14 @@ export default function SignupForm() {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email address"
+            placeholder="Enter your email"
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+            className="w-full px-5 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg transition-all"
           />
         </div>
         
         {error && (
-          <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+          <div className="text-red-700 text-sm bg-red-50 p-4 rounded-lg border border-red-100">
             {error}
           </div>
         )}
@@ -92,15 +89,15 @@ export default function SignupForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-4 px-6 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-lg hover:shadow-xl"
         >
           {isSubmitting ? 'Joining...' : 'Join Early Access'}
         </button>
+        
+        <p className="text-sm text-gray-500 text-center leading-relaxed">
+          No spam. We'll notify you when we launch.
+        </p>
       </form>
-      
-      <p className="text-sm text-gray-500 mt-3 text-center">
-        No spam, ever. Unsubscribe with one click.
-      </p>
     </div>
   )
 }
